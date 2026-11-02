@@ -16,7 +16,8 @@ await writeFile(path.join(dist, 'assets/reference.css'), css);
 await copyFile(path.join(root, 'src/styles/theme.css'), path.join(dist, 'assets/theme.css'));
 await copyFile(path.join(root, 'src/app.js'), path.join(dist, 'assets/app.js'));
 await copyFile(path.join(root, 'src/theme-init.js'), path.join(dist, 'assets/theme-init.js'));
-await copyFile(path.join(root, 'src/collaboration-document.js'), path.join(dist, 'assets/collaboration-document.js'));
+await copyFile(path.join(root, 'src/collaboration-config.js'), path.join(dist, 'assets/collaboration-config.js'));
+await copyFile(path.join(root, 'src/collaboration-form.js'), path.join(dist, 'assets/collaboration-form.js'));
 
 const logo = '<img class="logo-light" src="/assets/logo-light.png" alt="بی‌نهایت"><img class="logo-dark" src="/assets/logo-dark.png" alt="بی‌نهایت">';
 const posters = ['/assets/showreel-karbala.png', '/assets/showreel-flight.png', '/assets/showreel-worldcup.png'];
@@ -58,8 +59,8 @@ for (const page of metadata) {
   // Remove ambiguous duplicated image names from the accessibility tree.
   main = main.replace(/<a href="\/"(?![^>]*aria-label)([^>]*)>(<img class="logo-light")/, '<a href="/" aria-label="بی‌نهایت، صفحه خانه"$1>$2');
   main = main.replace(/class="logo-(light|dark)" src="([^"]+)" alt="بی‌نهایت"/g, 'class="logo-$1" src="$2" alt="" aria-hidden="true"');
-  const documentScript = page.route === '/collaboration' ? '<script src="/assets/collaboration-document.js" defer></script>\n' : '';
-  const html = `<!doctype html>\n<html lang="fa" dir="rtl" data-theme="light">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>${escape(page.title)}</title>\n<meta name="description" content="${escape(page.description)}">\n<meta name="color-scheme" content="light dark">\n<link rel="icon" href="/assets/logo-icon.jpg">\n<script src="/assets/theme-init.js"></script>\n<link rel="stylesheet" href="/assets/reference.css">\n<link rel="stylesheet" href="/assets/theme.css">\n${documentScript}<script src="/assets/app.js" defer></script>\n</head>\n<body>${main}</body>\n</html>\n`;
+  const collaborationScripts = page.route === '/collaboration' ? '<script src="/assets/collaboration-config.js" defer></script>\n<script src="/assets/collaboration-form.js" defer></script>\n' : '';
+  const html = `<!doctype html>\n<html lang="fa" dir="rtl" data-theme="light">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>${escape(page.title)}</title>\n<meta name="description" content="${escape(page.description)}">\n<meta name="color-scheme" content="light dark">\n<link rel="icon" href="/assets/logo-icon.jpg">\n<script src="/assets/theme-init.js"></script>\n<link rel="stylesheet" href="/assets/reference.css">\n<link rel="stylesheet" href="/assets/theme.css">\n${collaborationScripts}<script src="/assets/app.js" defer></script>\n</head>\n<body>${main}</body>\n</html>\n`;
   const directory = page.route === '/' ? dist : path.join(dist, page.route.slice(1));
   await mkdir(directory, { recursive: true });
   await writeFile(path.join(directory, 'index.html'), html);
