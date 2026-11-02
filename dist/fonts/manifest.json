@@ -1,0 +1,57 @@
+[
+  {
+    "name": "DAMOON_FANUM-Black.woff",
+    "bytes": 86916,
+    "sha256": "7cc3185515cc74d29a4827a13b1a3cd65b73e0acbab4691cfe297b83833b0057"
+  },
+  {
+    "name": "DAMOON_FANUM-Bold.woff",
+    "bytes": 87200,
+    "sha256": "5057069ab7fe478a615e67d145ae544b7bf03f916a95bed0c532a7753009a6f5"
+  },
+  {
+    "name": "DAMOON_FANUM-ExtraBold.woff",
+    "bytes": 87068,
+    "sha256": "a4dac246f71f9798fa145be7d3d5db5397dcc93ca711248e4c4bde6e9f584a90"
+  },
+  {
+    "name": "DAMOON_FANUM-ExtraLight.woff",
+    "bytes": 85820,
+    "sha256": "b0d1c241e318e5f86f8e5b59e2e1a2e5bfe6a7f247c63dd2237fe8f98ab90cb4"
+  },
+  {
+    "name": "DAMOON_FANUM-HairLine.woff",
+    "bytes": 81032,
+    "sha256": "e19670b84518a5d15cf5443c13307ad2ad63d71675908e24e52509d6be8d47db"
+  },
+  {
+    "name": "DAMOON_FANUM-Heavy.woff",
+    "bytes": 82836,
+    "sha256": "dd7290328cc035d5fade668d761d4c7a5c6be47b26d2fdcc5a25cf299affc92d"
+  },
+  {
+    "name": "DAMOON_FANUM-Light.woff",
+    "bytes": 85692,
+    "sha256": "772929546fa6c7cca3a6c433224b30c972ac8566f093d238fed3738b8ccd4063"
+  },
+  {
+    "name": "DAMOON_FANUM-Medium.woff",
+    "bytes": 86348,
+    "sha256": "fbbbcf82ea1cd6910134924b2b14425a96f1e6be9fad185f793925de3537f6d5"
+  },
+  {
+    "name": "DAMOON_FANUM-Regular.woff",
+    "bytes": 82824,
+    "sha256": "101f94d011c4c9605be270e1a9da79b7f72c930083e1494dff6d57b9ee7e2a2c"
+  },
+  {
+    "name": "DAMOON_FANUM-SemiBold.woff",
+    "bytes": 86408,
+    "sha256": "472b9e01cef0fec52348a1b2eaf35c0c204f72d15ae01490a26d6bd5b083a6f4"
+  },
+  {
+    "name": "DAMOON_FANUM-Thin.woff",
+    "bytes": 85236,
+    "sha256": "855b8c2a5a018567b0d06f6cf693411ce2146b0bde89796aa823ae8d917bb777"
+  }
+]
