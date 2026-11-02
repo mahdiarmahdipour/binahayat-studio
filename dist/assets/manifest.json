@@ -1,8 +1,8 @@
 [
   {
     "name": "app.js",
-    "bytes": 9277,
-    "sha256": "809dd73e1a919af6c2e6335a861f19bbcc49af87c9fcddc2104cf780f4ac8a2b"
+    "bytes": 4489,
+    "sha256": "45b27dd11be215c6851d8f919cf787f398e7be6d2332139e9cb781c422a8eb08"
   },
   {
     "name": "brand-sheet-01.png",
@@ -20,9 +20,19 @@
     "sha256": "414ad675172ad3faa61e449ca7f9706111b93f992261fa4302c0c420f04964f6"
   },
   {
+    "name": "collaboration-config.js",
+    "bytes": 177,
+    "sha256": "0c1435540bd6bd80b7df2507efd0f7d56d0a3f5ad2b963a8ff51024f2e10941c"
+  },
+  {
     "name": "collaboration-document.js",
     "bytes": 11387,
     "sha256": "59b94430ebb810d3d08e4e11402c86b19e0ae5180c2540ac38417a8d2d5ff1a2"
+  },
+  {
+    "name": "collaboration-form.js",
+    "bytes": 7157,
+    "sha256": "85dc2821c108a1a84bc7596d6736a0c65b7664db166488210bcf1c95ea72675c"
   },
   {
     "name": "logo-dark.png",
