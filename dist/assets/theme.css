@@ -117,3 +117,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(width<=700px){
   .cta{overflow:clip}
 }
+.form-info,.form-notice{color:var(--soft);font-size:13px;line-height:2;margin:0}
+.form-notice a{color:var(--orange);text-decoration:underline;text-underline-offset:4px}
+.project-form .form-success{color:var(--ink);margin:0;font-size:14px;line-height:2}
+.project-form[aria-busy="true"] button{cursor:wait;opacity:.7}
+.project-form button:disabled{cursor:not-allowed}
