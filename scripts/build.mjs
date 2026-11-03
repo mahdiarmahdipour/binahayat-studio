@@ -37,14 +37,19 @@ function framePlayer() {
   const source = new URL(frameVideo.url);
   if (source.protocol !== 'https:' || !['www.aparat.com', 'aparat.com'].includes(source.hostname)) throw new Error('Invalid frame video source');
   let player;
-  if (frameVideo.embedUrl) {
+  if (frameVideo.src) {
+    if (!/^\/assets\/[a-z0-9-]+\.mp4$/.test(frameVideo.src)) throw new Error('Invalid local frame video');
+    if (frameVideo.poster && !/^\/assets\/[a-z0-9-]+\.(?:jpg|png|webp)$/.test(frameVideo.poster)) throw new Error('Invalid frame video poster');
+    player = `<video src="${escape(frameVideo.src)}"${frameVideo.poster ? ` poster="${escape(frameVideo.poster)}"` : ''} controls playsinline preload="metadata" aria-label="${escape(frameVideo.title)}"><a href="${escape(frameVideo.src)}">دریافت ویدئو</a></video>`;
+  } else if (frameVideo.embedUrl) {
     const embed = new URL(frameVideo.embedUrl);
     if (embed.protocol !== 'https:' || !['www.aparat.com', 'aparat.com'].includes(embed.hostname)) throw new Error('Invalid frame video embed');
     player = `<iframe src="${escape(embed.href)}" title="${escape(frameVideo.title)}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   } else {
     player = `<a class="frame-direct-player" href="${escape(source.href)}" target="_blank" rel="noopener noreferrer"><img src="/assets/plus-mark.png" alt="" width="1080" height="1080"><span class="frame-play-symbol" aria-hidden="true">▶</span><strong>${escape(frameVideo.title)}</strong><span>تماشا در آپارات ↗</span></a>`;
   }
-  return `<figure class="frame-film"><div class="frame-film-player">${player}</div><figcaption><span>${escape(frameVideo.title)}</span><a href="${escape(source.href)}" target="_blank" rel="noopener noreferrer">تماشا در آپارات ↗</a></figcaption></figure>`;
+  const videoLink = frameVideo.src ? `<a href="${escape(frameVideo.src)}" download>دریافت ویدئو ↓</a>` : `<a href="${escape(source.href)}" target="_blank" rel="noopener noreferrer">تماشا در آپارات ↗</a>`;
+  return `<figure class="frame-film"><div class="frame-film-player">${player}</div><figcaption><span>${escape(frameVideo.title)}</span>${videoLink}</figcaption></figure>`;
 }
 const xVideo = '<div class="article-embed"><blockquote class="twitter-tweet" data-dnt="true" data-theme="dark"><a href="https://x.com/OpenAI/status/2104993966043320759">تماشای ویدیوی OpenAI در X</a></blockquote><p><a href="https://x.com/OpenAI/status/2104993966043320759" target="_blank" rel="noopener noreferrer">اگر ویدیو نمایش داده نمی‌شود، آن را در X ببینید ↗</a></p></div>';
 function collection(slug, title) {
