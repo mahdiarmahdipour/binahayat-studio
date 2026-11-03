@@ -6,6 +6,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const metadata = JSON.parse(await readFile(path.join(root, 'content/pages.json'), 'utf8'));
 const videos = JSON.parse(await readFile(path.join(root, 'content/aparat-videos.json'), 'utf8'));
+const frameVideo = JSON.parse(await readFile(path.join(root, 'content/frame-video.json'), 'utf8'));
+const headerTemplate = await readFile(path.join(root, 'src/partials/header.html'), 'utf8');
+const footerTemplate = await readFile(path.join(root, 'src/partials/footer.html'), 'utf8');
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 await mkdir(path.join(dist, 'assets'), { recursive: true });
 let css = await readFile(path.join(root, 'src/styles/reference.css'), 'utf8');
@@ -18,9 +21,32 @@ await copyFile(path.join(root, 'src/app.js'), path.join(dist, 'assets/app.js'));
 await copyFile(path.join(root, 'src/theme-init.js'), path.join(dist, 'assets/theme-init.js'));
 await copyFile(path.join(root, 'src/collaboration-config.js'), path.join(dist, 'assets/collaboration-config.js'));
 await copyFile(path.join(root, 'src/collaboration-form.js'), path.join(dist, 'assets/collaboration-form.js'));
+await copyFile(path.join(root, 'src/styles/plus.css'), path.join(dist, 'assets/plus.css'));
+await copyFile(path.join(root, 'src/styles/articles.css'), path.join(dist, 'assets/articles.css'));
 
 const logo = '<img class="logo-light" src="/assets/logo-light.png" alt="بی‌نهایت"><img class="logo-dark" src="/assets/logo-dark.png" alt="بی‌نهایت">';
 const posters = ['/assets/showreel-karbala.png', '/assets/showreel-flight.png', '/assets/showreel-worldcup.png'];
+function siteHeader(route) {
+  return headerTemplate.replace('{{HEADER_CLASS}}', route === '/' ? '' : 'header-solid')
+    .replace('{{SITE_LOGO}}', logo)
+    .replace(/<a\b([^>]*?)href="([^"]+)"([^>]*)>/g, (match, before, href, after) =>
+      href === route ? `<a${before}href="${href}"${after} aria-current="page">` : match);
+}
+const siteFooter = footerTemplate.replace('{{SITE_LOGO}}', logo);
+function framePlayer() {
+  const source = new URL(frameVideo.url);
+  if (source.protocol !== 'https:' || !['www.aparat.com', 'aparat.com'].includes(source.hostname)) throw new Error('Invalid frame video source');
+  let player;
+  if (frameVideo.embedUrl) {
+    const embed = new URL(frameVideo.embedUrl);
+    if (embed.protocol !== 'https:' || !['www.aparat.com', 'aparat.com'].includes(embed.hostname)) throw new Error('Invalid frame video embed');
+    player = `<iframe src="${escape(embed.href)}" title="${escape(frameVideo.title)}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    player = `<a class="frame-direct-player" href="${escape(source.href)}" target="_blank" rel="noopener noreferrer"><img src="/assets/plus-mark.png" alt="" width="1080" height="1080"><span class="frame-play-symbol" aria-hidden="true">▶</span><strong>${escape(frameVideo.title)}</strong><span>تماشا در آپارات ↗</span></a>`;
+  }
+  return `<figure class="frame-film"><div class="frame-film-player">${player}</div><figcaption><span>${escape(frameVideo.title)}</span><a href="${escape(source.href)}" target="_blank" rel="noopener noreferrer">تماشا در آپارات ↗</a></figcaption></figure>`;
+}
+const xVideo = '<div class="article-embed"><blockquote class="twitter-tweet" data-dnt="true" data-theme="dark"><a href="https://x.com/OpenAI/status/2104993966043320759">تماشای ویدیوی OpenAI در X</a></blockquote><p><a href="https://x.com/OpenAI/status/2104993966043320759" target="_blank" rel="noopener noreferrer">اگر ویدیو نمایش داده نمی‌شود، آن را در X ببینید ↗</a></p></div>';
 function collection(slug, title) {
   const items = videos[slug] || [];
   if (!items.length) return '<section class="empty-work-space shell" aria-label="ویدیوهای این اثر به‌زودی اضافه می‌شوند"></section>';
@@ -35,8 +61,15 @@ function collection(slug, title) {
 }
 for (const page of metadata) {
   let main = await readFile(path.join(root, 'src/pages', page.file), 'utf8');
+  const headerMarkup = siteHeader(page.route);
+  main = main.replace('<!--SITE_HEADER-->', headerMarkup)
+    .replace(/<header\b[^>]*class="site-header[^"]*"[^>]*>[\s\S]*?<\/header>/, () => headerMarkup);
+  main = main.replace('<!--SITE_FOOTER-->', siteFooter)
+    .replace(/<footer\b[^>]*class="footer shell"[^>]*>[\s\S]*?<\/footer>/, () => siteFooter);
   main = main.replace(/<img src="\/assets\/binahayat-logo-white\.png" alt="بی‌نهایت">/g, logo);
   main = main.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+  main = main.replace('<!--FRAME_VIDEO-->', framePlayer());
+  main = main.replace('<!--OPENAI_X_VIDEO-->', xVideo);
   if (page.route === '/') {
     let index = 0;
     main = main.replace(/<figure class="slide[^\"]*"[^>]*>[\s\S]*?<\/figure>/g, () => {
@@ -60,12 +93,14 @@ for (const page of metadata) {
   main = main.replace(/<a href="\/"(?![^>]*aria-label)([^>]*)>(<img class="logo-light")/, '<a href="/" aria-label="بی‌نهایت، صفحه خانه"$1>$2');
   main = main.replace(/class="logo-(light|dark)" src="([^"]+)" alt="بی‌نهایت"/g, 'class="logo-$1" src="$2" alt="" aria-hidden="true"');
   const collaborationScripts = page.route === '/collaboration' ? '<script src="/assets/collaboration-config.js" defer></script>\n<script src="/assets/collaboration-form.js" defer></script>\n' : '';
-  const html = `<!doctype html>\n<html lang="fa" dir="rtl" data-theme="light">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>${escape(page.title)}</title>\n<meta name="description" content="${escape(page.description)}">\n<meta name="color-scheme" content="light dark">\n<link rel="icon" href="/assets/logo-icon.jpg">\n<script src="/assets/theme-init.js"></script>\n<link rel="stylesheet" href="/assets/reference.css">\n<link rel="stylesheet" href="/assets/theme.css">\n${collaborationScripts}<script src="/assets/app.js" defer></script>\n</head>\n<body>${main}</body>\n</html>\n`;
+  const extraCss = page.route.startsWith('/plus') ? '<link rel="stylesheet" href="/assets/plus.css">\n' : page.route.startsWith('/blog') ? '<link rel="stylesheet" href="/assets/articles.css">\n' : '';
+  const externalMedia = page.route === '/blog/openai-devday-2026' ? '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>' : '';
+  const html = `<!doctype html>\n<html lang="fa" dir="rtl" data-theme="light">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>${escape(page.title)}</title>\n<meta name="description" content="${escape(page.description)}">\n<meta name="color-scheme" content="light dark">\n<link rel="icon" href="/assets/logo-icon.jpg">\n<script src="/assets/theme-init.js"></script>\n<link rel="stylesheet" href="/assets/reference.css">\n<link rel="stylesheet" href="/assets/theme.css">\n${extraCss}${collaborationScripts}<script src="/assets/app.js" defer></script>\n</head>\n<body${page.route.startsWith('/plus') ? ' class="site-plus"' : ''}>${main}${externalMedia}</body>\n</html>\n`;
   const directory = page.route === '/' ? dist : path.join(dist, page.route.slice(1));
   await mkdir(directory, { recursive: true });
   await writeFile(path.join(directory, 'index.html'), html);
 }
 const home = await readFile(path.join(dist, 'index.html'), 'utf8');
-const header = home.match(/<header[\s\S]*?<\/header>/)?.[0].replace('site-header shell', 'site-header shell header-solid') || '';
+const header = siteHeader('/404').replace('class="nav"', 'id="main-nav" class="nav"').replace('class="menu-button"', 'class="menu-button" aria-controls="main-nav"');
 await writeFile(path.join(dist, '404.html'), home.replace(/<main>[\s\S]*?<\/main>/, `<main class="not-found" id="top">${header}<div><b>۴۰۴</b><h1>این صفحه پیدا نشد.</h1><a class="button button-primary" href="/">بازگشت به خانه ↙</a></div></main>`).replace(/<title>.*?<\/title>/, '<title>صفحه پیدا نشد | بی‌نهایت</title>'));
 console.log(`Built ${metadata.length} pages in ${dist}`);
