@@ -27,11 +27,11 @@ function routeFor(filename) {
 const files = await filesIn(dist);
 const htmlFiles = files.filter(filename => filename.endsWith('.html'));
 const pages = htmlFiles.filter(filename => path.relative(dist, filename) !== '404.html');
-if (pages.length !== 9) report(`Expected 9 pages excluding 404.html; found ${pages.length}.`);
+const pageMetadata = JSON.parse(await fs.readFile(path.join(projectRoot, 'content/pages.json'), 'utf8'));
+if (pages.length !== pageMetadata.length) report(`Expected ${pageMetadata.length} pages excluding 404.html; found ${pages.length}.`);
 if (!htmlFiles.includes(path.join(dist, '404.html'))) report('Missing dist/404.html.');
 
-const requiredPages = ['index.html', 'about/index.html', 'works/index.html', 'blog/index.html', 'collaboration/index.html',
-  ...['leader-funeral', 'short-film', 'world-cup', 'ramadan-war'].map(slug => `works/${slug}/index.html`)];
+const requiredPages = pageMetadata.map(page => page.route === '/' ? 'index.html' : `${page.route.slice(1)}/index.html`);
 for (const relative of requiredPages) {
   if (!files.includes(path.join(dist, relative))) report(`Missing page: ${relative}`);
 }
