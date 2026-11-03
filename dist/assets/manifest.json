@@ -145,6 +145,16 @@
     "sha256": "85dc2821c108a1a84bc7596d6736a0c65b7664db166488210bcf1c95ea72675c"
   },
   {
+    "name": "frame-sansor-poster.jpg",
+    "bytes": 108710,
+    "sha256": "a659bd2b8407f9cc984e049d3d47f4465622cc8b5e0bdcfc9a47289754880023"
+  },
+  {
+    "name": "frame-sansor.mp4",
+    "bytes": 19696642,
+    "sha256": "e5e81fcaabffb35c474fe462c2b8490a9a290ad4c418f4b1eb60fab69d1f7739"
+  },
+  {
     "name": "logo-dark.png",
     "bytes": 43951,
     "sha256": "5509ddd0415098e44a96eef64e300a2fd0b755e5090ecfe8d4afa15b6976f2f0"
@@ -181,8 +191,8 @@
   },
   {
     "name": "plus.css",
-    "bytes": 9779,
-    "sha256": "99199e7fce48d357eac812652d81049264366db266885e9e3555cebcf28b50ef"
+    "bytes": 9881,
+    "sha256": "8f8a11dcf5df0f8deb7c938f0a5d8be3f639459531a329fd3c52ad8af6f0d1ab"
   },
   {
     "name": "reference.css",
