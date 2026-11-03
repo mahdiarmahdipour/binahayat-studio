@@ -122,3 +122,34 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .project-form .form-success{display:block;min-height:0;padding:0;border:0;text-align:right;color:var(--ink);margin:0;font-size:14px;line-height:2}
 .project-form[aria-busy="true"] button{cursor:wait;opacity:.7}
 .project-form button:disabled{cursor:not-allowed}
+
+/* Shared navigation supports both works and the Plus section. */
+.site-header .nav{gap:clamp(16px,1.8vw,30px)}
+.nav-parent{display:flex;align-items:center;gap:4px;height:100%}
+.nav-parent-link{font-size:14px;white-space:nowrap;color:#c8c8c8;transition:color .2s}
+.nav-parent-link:hover,.nav-parent-link:focus-visible{color:#fff}
+.subnav-trigger{width:30px;height:38px;display:inline-grid;place-items:center;background:none;border:0;color:var(--orange);font:20px Damoon;cursor:pointer;padding:0}
+.subnav-trigger span{transition:transform .2s}
+.subnav-trigger[aria-expanded="true"] span{transform:rotate(180deg)}
+.site-header .nav-dropdown .works-dropdown{opacity:0;visibility:hidden;pointer-events:none;transform:translate(50%,-10px)}
+.site-header .nav-dropdown .works-dropdown.dropdown-open{opacity:1;visibility:visible;pointer-events:auto;transform:translate(50%,0)}
+.plus-dropdown{width:250px;border-top-color:#8a50dd}
+.nav a[aria-current="page"]{color:var(--orange)}
+html[data-theme="light"] .nav-parent-link{color:#3d3d3d}
+html[data-theme="light"] .nav-parent-link:hover,html[data-theme="light"] .nav-parent-link:focus-visible{color:#000}
+.hero .nav-parent-link,html[data-theme="light"] .hero .nav-parent-link{color:#d9d9d9}
+.hero .nav-parent-link:hover,html[data-theme="light"] .hero .nav-parent-link:hover{color:#fff}
+.frame-direct-player{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;color:#fff;min-height:100%;padding:30px;position:relative;background:linear-gradient(145deg,#4a2272,#21112f)}
+.frame-direct-player>img{width:130px;height:auto;margin-bottom:15px}
+.frame-direct-player strong{font-size:22px;line-height:1.9}
+.frame-direct-player>span:last-child{font-size:13px;background:#ff4a28;border-radius:50px;padding:10px 22px}
+.frame-play-symbol{display:grid;place-items:center;width:65px;height:65px;border:1px solid #ffffff66;border-radius:50%;font:20px Arial;line-height:1}
+@media(width<=1000px){
+  .site-header .nav{gap:0}
+  .nav-parent{height:auto;justify-content:space-between;border-bottom:1px solid var(--line)}
+  .nav-parent-link{font-size:16px;padding-block:14px;flex:1}
+  .subnav-trigger{width:44px;height:44px}
+  .site-header .nav-dropdown .works-dropdown,.site-header .nav-dropdown .works-dropdown.dropdown-open{transform:none}
+  .plus-dropdown{width:100%}
+  .site-header .nav-dropdown .works-dropdown:not(.dropdown-open){display:none}
+}
