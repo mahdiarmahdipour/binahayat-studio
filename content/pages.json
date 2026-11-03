@@ -52,5 +52,29 @@
     "file": "works-ramadan-war.html",
     "title": "جنگ رمضان | بی‌نهایت",
     "description": "استودیوی تولید محتوای ویدیویی مبتنی بر هوش مصنوعی؛ از ایده و روایت تا تصویر و صدا."
+  },
+  {
+    "route": "/plus",
+    "file": "plus.html",
+    "title": "مثبت بی‌نهایت | افزونه‌ها و تجربه‌ها",
+    "description": "ویترین افزونه‌های مثبت بی‌نهایت و ویدئوهای فریم به فریم؛ پشت صحنهٔ آثار استودیوی بی‌نهایت."
+  },
+  {
+    "route": "/plus/frame-by-frame",
+    "file": "frame-by-frame.html",
+    "title": "فریم به فریم | مثبت بی‌نهایت",
+    "description": "روایت ساخته‌شدن آثار بی‌نهایت؛ تماشای پشت صحنه اثر سانسور در فریم به فریم."
+  },
+  {
+    "route": "/blog/openai-devday-2026",
+    "file": "blog-openai-devday.html",
+    "title": "تازه‌های OpenAI | رونمایی شده در رویداد Dev Day",
+    "description": "نگاهی به خدمات و ابزارهای معرفی‌شده در OpenAI DevDay 2026، همراه با تصاویر و ویدئوی رویداد."
+  },
+  {
+    "route": "/blog/qwen-image-2-1",
+    "file": "blog-qwen-image.html",
+    "title": "Qwen Image 2.1 منتشر شد | وبلاگ بی‌نهایت",
+    "description": "بررسی و مقایسه مدل Local Qwen Image 2.1 با دیگر مدل‌ها؛ تولید و ویرایش تصویر، تصویر مرجع و خروجی شفاف."
   }
 ]
