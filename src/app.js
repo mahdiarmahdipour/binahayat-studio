@@ -19,42 +19,65 @@
 
   const menuButton = document.querySelector('.menu-button');
   const nav = document.querySelector('.nav');
-  const trigger = document.querySelector('.works-trigger');
-  const dropdown = document.querySelector('.works-dropdown');
-  function closeDropdown() {
-    dropdown?.classList.remove('dropdown-open');
-    trigger?.setAttribute('aria-expanded', 'false');
+  const desktop = matchMedia('(min-width: 1001px)');
+  const dropdowns = [...document.querySelectorAll('[data-dropdown-trigger]')].map(trigger => ({
+    trigger, panel: document.getElementById(trigger.getAttribute('aria-controls')), group: trigger.closest('.nav-dropdown')
+  })).filter(item => item.panel && item.group);
+  function closeDropdowns(except = null) {
+    for (const item of dropdowns) {
+      if (item === except) continue;
+      item.panel.classList.remove('dropdown-open');
+      item.trigger.setAttribute('aria-expanded', 'false');
+    }
+  }
+  function openDropdown(item) {
+    closeDropdowns(item);
+    item.panel.classList.add('dropdown-open');
+    item.trigger.setAttribute('aria-expanded', 'true');
   }
   function closeMenu() {
     nav?.classList.remove('nav-open');
     menuButton?.setAttribute('aria-expanded', 'false');
     menuButton?.setAttribute('aria-label', 'باز کردن منو');
-    closeDropdown();
+    closeDropdowns();
   }
   menuButton?.addEventListener('click', () => {
     const open = nav?.classList.toggle('nav-open');
     menuButton.setAttribute('aria-expanded', String(Boolean(open)));
     menuButton.setAttribute('aria-label', open ? 'بستن منو' : 'باز کردن منو');
-    if (!open) closeDropdown();
+    if (!open) closeDropdowns();
   });
-  trigger?.addEventListener('click', () => {
-    const open = dropdown?.classList.toggle('dropdown-open');
-    trigger.setAttribute('aria-expanded', String(Boolean(open)));
-  });
+  for (const item of dropdowns) {
+    item.trigger.addEventListener('click', () => {
+      if (item.trigger.getAttribute('aria-expanded') === 'true') closeDropdowns();
+      else openDropdown(item);
+    });
+    item.group.addEventListener('pointerenter', event => {
+      if (desktop.matches && event.pointerType === 'mouse') openDropdown(item);
+    });
+    item.group.addEventListener('pointerleave', () => {
+      if (desktop.matches && !item.group.contains(document.activeElement)) closeDropdowns();
+    });
+    item.group.addEventListener('focusout', () => queueMicrotask(() => {
+      if (!item.group.contains(document.activeElement)) {
+        item.panel.classList.remove('dropdown-open');
+        item.trigger.setAttribute('aria-expanded', 'false');
+      }
+    }));
+  }
   document.addEventListener('click', event => {
-    if (!event.target.closest('.nav-dropdown')) closeDropdown();
+    if (!event.target.closest('.nav-dropdown')) closeDropdowns();
     if (!event.target.closest('.site-header')) closeMenu();
   });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
-      const wasDropdownOpen = trigger?.getAttribute('aria-expanded') === 'true';
+      const openItem = dropdowns.find(item => item.trigger.getAttribute('aria-expanded') === 'true');
       const wasMenuOpen = menuButton?.getAttribute('aria-expanded') === 'true';
       closeMenu();
-      if (wasDropdownOpen) trigger.focus();
-      else if (wasMenuOpen) menuButton.focus();
+      if (wasMenuOpen) menuButton.focus();
+      else if (openItem) openItem.trigger.focus();
     }
   });
-  const desktop = matchMedia('(min-width: 1001px)');
   desktop.addEventListener('change', closeMenu);
 
   const slides = [...document.querySelectorAll('.hero-slider .slide')];
